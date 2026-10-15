@@ -59,3 +59,14 @@ export function registerFaction(token: string, factionId: string): Promise<UserF
     body: JSON.stringify({ factionId }),
   });
 }
+
+export interface Country {
+  code: string;
+  name: string;
+  dominant_faction_id: string | null;
+  is_active: boolean;
+}
+
+export function listCountries(): Promise<Country[]> {
+  return request<Country[]>("/countries");
+}

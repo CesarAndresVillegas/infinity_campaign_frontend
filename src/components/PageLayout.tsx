@@ -14,18 +14,34 @@ export default function PageLayout({ children }: { children: ReactNode }) {
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           <Link to="/" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
-            Inicio
+            Mapa
           </Link>
-          <Link to="/factions" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
-            Mis ejércitos
-          </Link>
-          <span className="text-[var(--color-text-muted)]">{session?.email}</span>
-          <Button variant="secondary" onClick={signOut} className="px-3 py-1 text-sm">
-            Salir
-          </Button>
+          {session ? (
+            <>
+              <Link to="/factions" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+                Mis ejércitos
+              </Link>
+              <span className="text-[var(--color-text-muted)]">{session.email}</span>
+              <Button variant="secondary" onClick={signOut} className="px-3 py-1 text-sm">
+                Salir
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+                Iniciar sesión
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-md bg-[var(--color-accent)] px-3 py-1 font-medium text-[#06111a] transition-colors hover:bg-[var(--color-accent-hover)]"
+              >
+                Registrarme
+              </Link>
+            </>
+          )}
         </nav>
       </header>
-      <main className="mx-auto max-w-4xl px-6 py-8">{children}</main>
+      <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
     </div>
   );
 }
