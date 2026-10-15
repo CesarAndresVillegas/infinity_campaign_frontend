@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Orbitron", sans-serif;
+  --font-sans: "Inter", sans-serif;
+
+  --color-bg: #0a0e16;
+  --color-surface: #131a26;
+  --color-surface-hover: #1b2433;
+  --color-border: #253044;
+  --color-accent: #22d3ee;
+  --color-accent-hover: #67e8f9;
+  --color-text: #e5eaf2;
+  --color-text-muted: #8b96a8;
+  --color-danger: #f87171;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}

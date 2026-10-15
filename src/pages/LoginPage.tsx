@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import AuthLayout from "../components/AuthLayout";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -25,31 +28,33 @@ export default function LoginPage() {
   }
 
   return (
-    <div>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <input
+    <AuthLayout title="Iniciar sesión">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <Input
           type="email"
           placeholder="Correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
+        <Input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting}>
           Entrar
-        </button>
+        </Button>
       </form>
-      {error && <p role="alert">{error}</p>}
-      <p>
-        ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+      {error && <p className="mt-3 text-sm text-[var(--color-danger)]">{error}</p>}
+      <p className="mt-6 text-sm text-[var(--color-text-muted)]">
+        ¿No tienes cuenta?{" "}
+        <Link to="/register" className="text-[var(--color-accent)] hover:underline">
+          Regístrate
+        </Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 }

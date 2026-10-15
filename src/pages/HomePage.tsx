@@ -1,19 +1,12 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import PageLayout from "../components/PageLayout";
 
 export default function HomePage() {
-  const { session, signOut } = useAuth();
-
   return (
-    <div>
-      <h1>Infinity Campaign</h1>
-      <p>Sesión iniciada como {session?.email}</p>
-      <p>
-        <Link to="/factions">Mis ejércitos</Link>
+    <PageLayout>
+      <h1 className="text-2xl font-bold">Bienvenido a la campaña</h1>
+      <p className="mt-2 text-[var(--color-text-muted)]">
+        Pronto vas a poder ver el mapa mundial y reportar tus partidas desde aquí.
       </p>
-      <button type="button" onClick={signOut}>
-        Cerrar sesión
-      </button>
-    </div>
+    </PageLayout>
   );
 }

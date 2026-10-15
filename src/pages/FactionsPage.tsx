@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { listFactions, getMe, registerFaction } from "../api/client";
 import type { Faction, UserFaction } from "../api/client";
 import { RANK_NAMES } from "../constants/ranks";
+import PageLayout from "../components/PageLayout";
+import Button from "../components/Button";
 
 export default function FactionsPage() {
   const { session } = useAuth();
@@ -47,51 +48,64 @@ export default function FactionsPage() {
     }
   }
 
-  if (loading) return <p>Cargando...</p>;
-
   const myFactionIds = new Set(myFactions.map((f) => f.faction_id));
 
   return (
-    <div>
-      <h1>Mis ejércitos</h1>
-      <p>
-        <Link to="/">Volver</Link>
-      </p>
-      {error && <p role="alert">{error}</p>}
+    <PageLayout>
+      <h1 className="text-2xl font-bold">Mis ejércitos</h1>
+      {error && <p className="mt-3 text-sm text-[var(--color-danger)]">{error}</p>}
 
-      {myFactions.length > 0 && (
+      {loading ? (
+        <p className="mt-6 text-[var(--color-text-muted)]">Cargando...</p>
+      ) : (
         <>
-          <h2>Ejércitos registrados</h2>
-          <ul>
-            {myFactions.map((uf) => {
-              const faction = factions.find((f) => f.id === uf.faction_id);
-              return (
-                <li key={uf.faction_id}>
-                  {faction?.name ?? uf.faction_id} — {uf.points} pts — {RANK_NAMES[uf.rank] ?? uf.rank}
-                </li>
-              );
-            })}
-          </ul>
+          {myFactions.length > 0 && (
+            <section className="mt-6">
+              <h2 className="mb-3 text-lg font-semibold text-[var(--color-accent)]">Registrados</h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {myFactions.map((uf) => {
+                  const faction = factions.find((f) => f.id === uf.faction_id);
+                  return (
+                    <div
+                      key={uf.faction_id}
+                      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+                    >
+                      <p className="font-semibold">{faction?.name ?? uf.faction_id}</p>
+                      <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                        {uf.points} pts — {RANK_NAMES[uf.rank] ?? uf.rank}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          <section className="mt-8">
+            <h2 className="mb-3 text-lg font-semibold text-[var(--color-accent)]">Registrar un nuevo ejército</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {factions
+                .filter((f) => !myFactionIds.has(f.id))
+                .map((faction) => (
+                  <div
+                    key={faction.id}
+                    className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+                  >
+                    <span className="font-medium">{faction.name}</span>
+                    <Button
+                      variant="secondary"
+                      className="px-3 py-1 text-sm"
+                      onClick={() => handleRegister(faction.id)}
+                      disabled={registeringId === faction.id}
+                    >
+                      Registrar
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          </section>
         </>
       )}
-
-      <h2>Registrar un nuevo ejército</h2>
-      <ul>
-        {factions
-          .filter((f) => !myFactionIds.has(f.id))
-          .map((faction) => (
-            <li key={faction.id}>
-              {faction.name}{" "}
-              <button
-                type="button"
-                onClick={() => handleRegister(faction.id)}
-                disabled={registeringId === faction.id}
-              >
-                Registrar
-              </button>
-            </li>
-          ))}
-      </ul>
-    </div>
+    </PageLayout>
   );
 }

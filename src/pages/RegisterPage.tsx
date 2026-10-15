@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp, confirmSignUp, resendConfirmationCode } from "../auth/cognitoClient";
+import AuthLayout from "../components/AuthLayout";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -50,41 +53,39 @@ export default function RegisterPage() {
 
   if (step === "confirm") {
     return (
-      <div>
-        <h1>Confirma tu correo</h1>
-        <p>Te enviamos un código a {email}</p>
-        <form onSubmit={handleConfirm}>
-          <input
+      <AuthLayout title="Confirma tu correo">
+        <p className="mb-4 text-sm text-[var(--color-text-muted)]">Te enviamos un código a {email}</p>
+        <form onSubmit={handleConfirm} className="flex flex-col gap-4">
+          <Input
             type="text"
             placeholder="Código de confirmación"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             required
           />
-          <button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting}>
             Confirmar
-          </button>
+          </Button>
         </form>
-        <button type="button" onClick={handleResend}>
+        <Button type="button" variant="secondary" onClick={handleResend} className="mt-3 w-full">
           Reenviar código
-        </button>
-        {error && <p role="alert">{error}</p>}
-      </div>
+        </Button>
+        {error && <p className="mt-3 text-sm text-[var(--color-danger)]">{error}</p>}
+      </AuthLayout>
     );
   }
 
   return (
-    <div>
-      <h1>Registro</h1>
-      <form onSubmit={handleRegister}>
-        <input
+    <AuthLayout title="Registro">
+      <form onSubmit={handleRegister} className="flex flex-col gap-4">
+        <Input
           type="email"
           placeholder="Correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
+        <Input
           type="password"
           placeholder="Contraseña"
           value={password}
@@ -92,14 +93,17 @@ export default function RegisterPage() {
           required
           minLength={8}
         />
-        <button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting}>
           Registrarme
-        </button>
+        </Button>
       </form>
-      {error && <p role="alert">{error}</p>}
-      <p>
-        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+      {error && <p className="mt-3 text-sm text-[var(--color-danger)]">{error}</p>}
+      <p className="mt-6 text-sm text-[var(--color-text-muted)]">
+        ¿Ya tienes cuenta?{" "}
+        <Link to="/login" className="text-[var(--color-accent)] hover:underline">
+          Inicia sesión
+        </Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 }
