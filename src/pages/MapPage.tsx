@@ -57,7 +57,7 @@ export default function MapPage() {
         </p>
       )}
 
-      <div className="relative mt-6 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+      <div className="relative mt-6 h-[75vh] overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
         {loading && (
           <p className="absolute left-4 top-4 z-10 text-sm text-[var(--color-text-muted)]">Cargando...</p>
         )}
@@ -65,7 +65,7 @@ export default function MapPage() {
           width={800}
           height={450}
           projectionConfig={{ scale: 147 }}
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "100%" }}
         >
           <ZoomableGroup>
             <Geographies geography={GEO_URL}>
