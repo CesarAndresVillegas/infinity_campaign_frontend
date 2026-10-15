@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import Button from "./Button";
 
-export default function PageLayout({ children }: { children: ReactNode }) {
+export default function PageLayout({ children, fullWidth = false }: { children: ReactNode; fullWidth?: boolean }) {
   const { session, signOut } = useAuth();
 
   return (
@@ -41,7 +41,7 @@ export default function PageLayout({ children }: { children: ReactNode }) {
           )}
         </nav>
       </header>
-      <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+      <main className={fullWidth ? "px-6 py-8" : "mx-auto max-w-5xl px-6 py-8"}>{children}</main>
     </div>
   );
 }

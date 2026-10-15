@@ -45,7 +45,7 @@ export default function MapPage() {
   }, [factions]);
 
   return (
-    <PageLayout>
+    <PageLayout fullWidth>
       <h1 className="text-2xl font-bold">Mapa de campaña</h1>
       <p className="mt-2 text-[var(--color-text-muted)]">
         Facción dominante por país, actualizada automáticamente según las partidas reportadas.
@@ -61,7 +61,12 @@ export default function MapPage() {
         {loading && (
           <p className="absolute left-4 top-4 z-10 text-sm text-[var(--color-text-muted)]">Cargando...</p>
         )}
-        <ComposableMap projectionConfig={{ scale: 150 }} style={{ width: "100%", height: "auto" }}>
+        <ComposableMap
+          width={800}
+          height={450}
+          projectionConfig={{ scale: 147 }}
+          style={{ width: "100%", height: "auto" }}
+        >
           <ZoomableGroup>
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
