@@ -9,7 +9,7 @@ export default function PageLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-4">
-        <Link to="/" className="font-display text-lg font-bold tracking-wide text-[var(--color-accent)]">
+        <Link to="/" className="neon-text text-lg text-[var(--color-accent)]">
           INFINITY CAMPAIGN
         </Link>
         <nav className="flex items-center gap-6 text-sm">

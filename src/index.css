@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Orbitron", sans-serif;
+  --font-display: "Audiowide", sans-serif;
   --font-sans: "Inter", sans-serif;
 
   --color-bg: #0a0e16;
@@ -24,7 +24,11 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+.neon-text {
   font-family: var(--font-display);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--color-accent) 70%, transparent),
+    0 0 18px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
