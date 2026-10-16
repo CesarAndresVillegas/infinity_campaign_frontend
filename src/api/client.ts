@@ -192,3 +192,14 @@ export function createPost(token: string, threadId: string, text: string): Promi
     body: JSON.stringify({ text }),
   });
 }
+
+export interface LeaderboardEntry {
+  user_id: string;
+  email: string;
+  points: number;
+  rank: number;
+}
+
+export function getLeaderboard(factionId: string, limit = 20): Promise<LeaderboardEntry[]> {
+  return request<LeaderboardEntry[]>(`/factions/${factionId}/leaderboard?limit=${limit}`);
+}

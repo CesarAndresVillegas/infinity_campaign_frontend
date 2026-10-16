@@ -10,6 +10,7 @@ import MatchDetailPage from "./pages/MatchDetailPage";
 import ReportMatchPage from "./pages/ReportMatchPage";
 import ForumThreadsPage from "./pages/ForumThreadsPage";
 import ForumThreadPage from "./pages/ForumThreadPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/matches" element={<MatchesFeedPage />} />
           <Route path="/matches/:matchId" element={<MatchDetailPage />} />
           <Route
