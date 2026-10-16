@@ -141,3 +141,54 @@ export function unlikeMatch(token: string, matchId: string): Promise<void> {
 export function addMatchView(matchId: string): Promise<void> {
   return request<void>(`/matches/${matchId}/views`, { method: "POST" });
 }
+
+export interface PublicUser {
+  id: string;
+  email: string;
+  created_at: string;
+}
+
+export function getUser(token: string, userId: string): Promise<PublicUser> {
+  return request<PublicUser>(`/users/${userId}`, { token });
+}
+
+export interface ForumThread {
+  id: string;
+  faction_id: string;
+  author_user_id: string;
+  title: string;
+  created_at: string;
+}
+
+export interface ForumPost {
+  id: string;
+  thread_id: string;
+  faction_id: string;
+  author_user_id: string;
+  text: string;
+  created_at: string;
+}
+
+export function listThreads(token: string, factionId: string): Promise<ForumThread[]> {
+  return request<ForumThread[]>(`/factions/${factionId}/threads`, { token });
+}
+
+export function createThread(token: string, factionId: string, title: string): Promise<ForumThread> {
+  return request<ForumThread>(`/factions/${factionId}/threads`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ title }),
+  });
+}
+
+export function listPosts(token: string, threadId: string): Promise<ForumPost[]> {
+  return request<ForumPost[]>(`/threads/${threadId}/posts`, { token });
+}
+
+export function createPost(token: string, threadId: string, text: string): Promise<ForumPost> {
+  return request<ForumPost>(`/threads/${threadId}/posts`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ text }),
+  });
+}

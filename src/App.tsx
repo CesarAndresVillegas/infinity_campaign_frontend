@@ -8,6 +8,8 @@ import FactionsPage from "./pages/FactionsPage";
 import MatchesFeedPage from "./pages/MatchesFeedPage";
 import MatchDetailPage from "./pages/MatchDetailPage";
 import ReportMatchPage from "./pages/ReportMatchPage";
+import ForumThreadsPage from "./pages/ForumThreadsPage";
+import ForumThreadPage from "./pages/ForumThreadPage";
 
 function App() {
   return (
@@ -32,6 +34,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReportMatchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forum/:factionId"
+            element={
+              <ProtectedRoute>
+                <ForumThreadsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forum/:factionId/:threadId"
+            element={
+              <ProtectedRoute>
+                <ForumThreadPage />
               </ProtectedRoute>
             }
           />

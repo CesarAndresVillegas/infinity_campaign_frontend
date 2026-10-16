@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { listFactions, getMe, registerFaction } from "../api/client";
 import type { Faction, UserFaction } from "../api/client";
@@ -73,12 +74,18 @@ export default function FactionsPage() {
                       {faction?.logo_url && (
                         <img src={faction.logo_url} alt={faction.name} className="h-10 w-10 rounded-full" />
                       )}
-                      <div>
+                      <div className="flex-1">
                         <p className="font-semibold">{faction?.name ?? uf.faction_id}</p>
                         <p className="mt-1 text-sm text-[var(--color-text-muted)]">
                           {uf.points} pts — {RANK_NAMES[uf.rank] ?? uf.rank}
                         </p>
                       </div>
+                      <Link
+                        to={`/forum/${uf.faction_id}`}
+                        className="text-sm text-[var(--color-accent)] hover:underline"
+                      >
+                        Foro
+                      </Link>
                     </div>
                   );
                 })}
