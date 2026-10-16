@@ -9,6 +9,7 @@ export const FACTION_COLORS: Record<string, string> = {
   O12: "#3b82f6",
   TOHAA: "#f97316",
   NA2: "#9ca3af",
+  JSA: "#cd1333",
 };
 
 export const UNCLAIMED_COLOR = "#1b2433";

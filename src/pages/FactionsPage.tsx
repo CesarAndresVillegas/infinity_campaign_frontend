@@ -68,12 +68,17 @@ export default function FactionsPage() {
                   return (
                     <div
                       key={uf.faction_id}
-                      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+                      className="flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
                     >
-                      <p className="font-semibold">{faction?.name ?? uf.faction_id}</p>
-                      <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-                        {uf.points} pts — {RANK_NAMES[uf.rank] ?? uf.rank}
-                      </p>
+                      {faction?.logo_url && (
+                        <img src={faction.logo_url} alt={faction.name} className="h-10 w-10 rounded-full" />
+                      )}
+                      <div>
+                        <p className="font-semibold">{faction?.name ?? uf.faction_id}</p>
+                        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                          {uf.points} pts — {RANK_NAMES[uf.rank] ?? uf.rank}
+                        </p>
+                      </div>
                     </div>
                   );
                 })}
@@ -91,7 +96,12 @@ export default function FactionsPage() {
                     key={faction.id}
                     className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
                   >
-                    <span className="font-medium">{faction.name}</span>
+                    <span className="flex items-center gap-3 font-medium">
+                      {faction.logo_url && (
+                        <img src={faction.logo_url} alt={faction.name} className="h-8 w-8 rounded-full" />
+                      )}
+                      {faction.name}
+                    </span>
                     <Button
                       variant="secondary"
                       className="px-3 py-1 text-sm"

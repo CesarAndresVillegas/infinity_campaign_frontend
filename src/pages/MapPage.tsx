@@ -13,6 +13,7 @@ interface TooltipState {
   y: number;
   countryName: string;
   factionName: string | null;
+  factionLogoUrl: string | null;
 }
 
 export default function MapPage() {
@@ -38,9 +39,9 @@ export default function MapPage() {
     return map;
   }, [countries]);
 
-  const factionNameById = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const f of factions) map.set(f.id, f.name);
+  const factionById = useMemo(() => {
+    const map = new Map<string, Faction>();
+    for (const f of factions) map.set(f.id, f);
     return map;
   }, [factions]);
 
@@ -75,6 +76,7 @@ export default function MapPage() {
                   const country = alpha2 ? countryByCode.get(alpha2) : undefined;
                   const factionId = country?.dominant_faction_id ?? null;
                   const fill = factionId ? (FACTION_COLORS[factionId] ?? UNCLAIMED_COLOR) : UNCLAIMED_COLOR;
+                  const dominantFaction = factionId ? factionById.get(factionId) : undefined;
 
                   return (
                     <Geography
@@ -88,7 +90,8 @@ export default function MapPage() {
                           x: evt.clientX,
                           y: evt.clientY,
                           countryName: country?.name ?? String(geo.properties?.name ?? "Desconocido"),
-                          factionName: factionId ? (factionNameById.get(factionId) ?? factionId) : null,
+                          factionName: factionId ? (dominantFaction?.name ?? factionId) : null,
+                          factionLogoUrl: dominantFaction?.logo_url ?? null,
                         });
                       }}
                       onMouseMove={(evt) => {
@@ -111,19 +114,26 @@ export default function MapPage() {
           style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}
         >
           <p className="font-semibold">{tooltip.countryName}</p>
-          <p className="text-[var(--color-text-muted)]">
-            {tooltip.factionName ? tooltip.factionName : "Sin reclamar"}
-          </p>
+          <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
+            {tooltip.factionLogoUrl && (
+              <img src={tooltip.factionLogoUrl} alt={tooltip.factionName ?? ""} className="h-4 w-4 rounded-full" />
+            )}
+            <span>{tooltip.factionName ? tooltip.factionName : "Sin reclamar"}</span>
+          </div>
         </div>
       )}
 
       <div className="mt-6 flex flex-wrap gap-4">
         {factions.map((f) => (
           <div key={f.id} className="flex items-center gap-2 text-sm">
-            <span
-              className="h-3 w-3 rounded-full"
-              style={{ backgroundColor: FACTION_COLORS[f.id] ?? UNCLAIMED_COLOR }}
-            />
+            {f.logo_url ? (
+              <img src={f.logo_url} alt={f.name} className="h-5 w-5 rounded-full" />
+            ) : (
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: FACTION_COLORS[f.id] ?? UNCLAIMED_COLOR }}
+              />
+            )}
             <span className="text-[var(--color-text-muted)]">{f.name}</span>
           </div>
         ))}
