@@ -16,6 +16,9 @@ export default function PageLayout({ children, fullWidth = false }: { children: 
           <Link to="/" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
             Mapa
           </Link>
+          <Link to="/matches" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+            Partidas
+          </Link>
           {session ? (
             <>
               <Link to="/factions" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">

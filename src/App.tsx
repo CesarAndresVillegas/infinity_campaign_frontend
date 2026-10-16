@@ -5,6 +5,9 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MapPage from "./pages/MapPage";
 import FactionsPage from "./pages/FactionsPage";
+import MatchesFeedPage from "./pages/MatchesFeedPage";
+import MatchDetailPage from "./pages/MatchDetailPage";
+import ReportMatchPage from "./pages/ReportMatchPage";
 
 function App() {
   return (
@@ -19,6 +22,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <FactionsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/matches" element={<MatchesFeedPage />} />
+          <Route path="/matches/:matchId" element={<MatchDetailPage />} />
+          <Route
+            path="/matches/new"
+            element={
+              <ProtectedRoute>
+                <ReportMatchPage />
               </ProtectedRoute>
             }
           />

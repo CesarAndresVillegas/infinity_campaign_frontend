@@ -70,3 +70,74 @@ export interface Country {
 export function listCountries(): Promise<Country[]> {
   return request<Country[]>("/countries");
 }
+
+export type MatchResult = "win" | "draw" | "loss";
+
+export interface Match {
+  id: string;
+  user_id: string;
+  faction_id: string;
+  country_code: string;
+  opponent_user_id: string | null;
+  opponent_faction_id: string;
+  result: MatchResult;
+  base_score: number;
+  text: string | null;
+  views_count: number;
+  created_at: string;
+}
+
+export interface MatchWithLikes extends Match {
+  likes_count: number;
+}
+
+export interface MatchImage {
+  id: string;
+  url: string;
+  sort_order: number;
+}
+
+export interface MatchDetail extends MatchWithLikes {
+  images: MatchImage[];
+}
+
+export interface CreateMatchInput {
+  factionId: string;
+  countryCode: string;
+  opponentFactionId: string;
+  result: MatchResult;
+  text?: string;
+  imageUrls?: string[];
+}
+
+export function createMatch(token: string, input: CreateMatchInput): Promise<Match> {
+  return request<Match>("/matches", {
+    method: "POST",
+    token,
+    body: JSON.stringify(input),
+  });
+}
+
+export function listMatches(limit = 20, offset = 0): Promise<MatchWithLikes[]> {
+  return request<MatchWithLikes[]>(`/matches?limit=${limit}&offset=${offset}`);
+}
+
+export function getMatch(matchId: string): Promise<MatchDetail> {
+  return request<MatchDetail>(`/matches/${matchId}`);
+}
+
+export function listUserMatches(userId: string, limit = 20, offset = 0): Promise<MatchWithLikes[]> {
+  return request<MatchWithLikes[]>(`/users/${userId}/matches?limit=${limit}&offset=${offset}`);
+}
+
+export function likeMatch(token: string, matchId: string): Promise<void> {
+  return request<void>(`/matches/${matchId}/like`, { method: "POST", token });
+}
+
+export function unlikeMatch(token: string, matchId: string): Promise<void> {
+  return request<void>(`/matches/${matchId}/like`, { method: "DELETE", token });
+}
+
+export function addMatchView(matchId: string): Promise<void> {
+  return request<void>(`/matches/${matchId}/views`, { method: "POST" });
+}
