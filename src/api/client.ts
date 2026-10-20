@@ -23,6 +23,22 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   return res.json() as Promise<T>;
 }
 
+export async function uploadMatchImage(token: string, file: File): Promise<string> {
+  const { uploadUrl, publicUrl } = await request<{ uploadUrl: string; publicUrl: string }>(
+    "/uploads/presigned-url",
+    { method: "POST", token, body: JSON.stringify({ contentType: file.type }) }
+  );
+
+  const res = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: { "content-type": file.type },
+    body: file,
+  });
+  if (!res.ok) throw new Error("No se pudo subir la imagen");
+
+  return publicUrl;
+}
+
 export interface Faction {
   id: string;
   name: string;

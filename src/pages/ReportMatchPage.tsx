@@ -1,11 +1,10 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { createMatch, getMe, listCountries, listFactions } from "../api/client";
+import { createMatch, getMe, listCountries, listFactions, uploadMatchImage } from "../api/client";
 import type { Country, Faction, MatchResult, UserFaction } from "../api/client";
 import { RESULT_LABELS } from "../constants/matchResults";
 import PageLayout from "../components/PageLayout";
-import Input from "../components/Input";
 import Button from "../components/Button";
 
 export default function ReportMatchPage() {
@@ -23,10 +22,11 @@ export default function ReportMatchPage() {
   const [opponentFactionId, setOpponentFactionId] = useState("");
   const [result, setResult] = useState<MatchResult>("win");
   const [text, setText] = useState("");
-  const [imageUrls, setImageUrls] = useState<string[]>([""]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
   useEffect(() => {
     if (!session) return;
@@ -41,16 +41,13 @@ export default function ReportMatchPage() {
       .finally(() => setLoading(false));
   }, [session]);
 
-  function updateImageUrl(index: number, value: string) {
-    setImageUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
+  function addImageFiles(files: FileList | null) {
+    if (!files) return;
+    setImageFiles((prev) => [...prev, ...Array.from(files)]);
   }
 
-  function addImageUrlField() {
-    setImageUrls((prev) => [...prev, ""]);
-  }
-
-  function removeImageUrlField(index: number) {
-    setImageUrls((prev) => prev.filter((_, i) => i !== index));
+  function removeImageFile(index: number) {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -65,18 +62,26 @@ export default function ReportMatchPage() {
 
     setSubmitting(true);
     try {
+      const imageUrls: string[] = [];
+      for (let i = 0; i < imageFiles.length; i++) {
+        setUploadProgress(`Subiendo imagen ${i + 1} de ${imageFiles.length}...`);
+        imageUrls.push(await uploadMatchImage(session.idToken, imageFiles[i]));
+      }
+      setUploadProgress(null);
+
       const match = await createMatch(session.idToken, {
         factionId,
         countryCode,
         opponentFactionId,
         result,
         text: text.trim() ? text.trim() : undefined,
-        imageUrls: imageUrls.map((url) => url.trim()).filter(Boolean),
+        imageUrls,
       });
       navigate(`/matches/${match.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo reportar la partida");
     } finally {
+      setUploadProgress(null);
       setSubmitting(false);
     }
   }
@@ -177,27 +182,40 @@ export default function ReportMatchPage() {
           </label>
 
           <div className="flex flex-col gap-2">
-            <span className="text-sm text-[var(--color-text-muted)]">Imágenes (opcional, URLs)</span>
-            {imageUrls.map((url, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  type="url"
-                  placeholder="https://..."
-                  value={url}
-                  onChange={(e) => updateImageUrl(index, e.target.value)}
-                />
-                {imageUrls.length > 1 && (
-                  <Button type="button" variant="secondary" onClick={() => removeImageUrlField(index)}>
-                    Quitar
-                  </Button>
-                )}
+            <span className="text-sm text-[var(--color-text-muted)]">Imágenes (opcional)</span>
+            {imageFiles.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {imageFiles.map((file, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className="h-20 w-20 rounded-md object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImageFile(index)}
+                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-danger)] text-xs text-white"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-            <Button type="button" variant="secondary" className="self-start" onClick={addImageUrlField}>
-              Añadir otra imagen
-            </Button>
+            )}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              onChange={(e) => {
+                addImageFiles(e.target.files);
+                e.target.value = "";
+              }}
+              className="text-sm text-[var(--color-text-muted)]"
+            />
           </div>
 
+          {uploadProgress && <p className="text-sm text-[var(--color-text-muted)]">{uploadProgress}</p>}
           {error && <p className="text-sm text-[var(--color-danger)]">{error}</p>}
 
           <Button type="submit" disabled={submitting}>
