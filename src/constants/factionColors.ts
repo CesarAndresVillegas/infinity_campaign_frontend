@@ -1,5 +1,5 @@
 export const FACTION_COLORS: Record<string, string> = {
-  PANO: "#f2c94c",
+  PANO: "#0ea5e9",
   YUJING: "#e53e3e",
   ARIADNA: "#6b8f3c",
   HAQQISLAM: "#1dbfab",
