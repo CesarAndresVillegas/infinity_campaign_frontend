@@ -158,6 +158,10 @@ export function addMatchView(matchId: string): Promise<void> {
   return request<void>(`/matches/${matchId}/views`, { method: "POST" });
 }
 
+export function deleteMatch(token: string, matchId: string): Promise<void> {
+  return request<void>(`/matches/${matchId}`, { method: "DELETE", token });
+}
+
 export interface PublicUser {
   id: string;
   email: string;
@@ -207,6 +211,10 @@ export function createPost(token: string, threadId: string, text: string): Promi
     token,
     body: JSON.stringify({ text }),
   });
+}
+
+export function deletePost(token: string, threadId: string, postId: string): Promise<void> {
+  return request<void>(`/threads/${threadId}/posts/${postId}`, { method: "DELETE", token });
 }
 
 export interface LeaderboardEntry {

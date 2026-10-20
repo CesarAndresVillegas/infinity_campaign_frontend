@@ -58,6 +58,7 @@ export function confirmForgotPassword(email: string, code: string, newPassword: 
 export interface Session {
   idToken: string;
   email: string;
+  userId: string;
 }
 
 export function signIn(email: string, password: string): Promise<Session> {
@@ -70,6 +71,7 @@ export function signIn(email: string, password: string): Promise<Session> {
         resolve({
           idToken: result.getIdToken().getJwtToken(),
           email: String(result.getIdToken().payload.email),
+          userId: String(result.getIdToken().payload.sub),
         });
       },
       onFailure: (err) => reject(err),
@@ -95,6 +97,7 @@ export function getCurrentSession(): Promise<Session | null> {
       resolve({
         idToken: result.getIdToken().getJwtToken(),
         email: String(result.getIdToken().payload.email),
+        userId: String(result.getIdToken().payload.sub),
       });
     });
   });

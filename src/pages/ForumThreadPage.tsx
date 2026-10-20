@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { createPost, getUser, listPosts } from "../api/client";
+import { createPost, deletePost, getUser, listPosts } from "../api/client";
 import type { ForumPost } from "../api/client";
 import PageLayout from "../components/PageLayout";
 import Button from "../components/Button";
@@ -34,6 +34,17 @@ export default function ForumThreadPage() {
       .catch((err) => setError(err instanceof Error ? err.message : "No se pudo cargar el tema"))
       .finally(() => setLoading(false));
   }, [threadId, session]);
+
+  async function handleDeletePost(postId: string) {
+    if (!session || !threadId) return;
+    if (!confirm("¿Seguro que quieres borrar esta publicación?")) return;
+    try {
+      await deletePost(session.idToken, threadId, postId);
+      setPosts((prev) => prev.filter((p) => p.id !== postId));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo borrar la publicación");
+    }
+  }
 
   async function handleReply(e: FormEvent) {
     e.preventDefault();
@@ -68,9 +79,20 @@ export default function ForumThreadPage() {
             {posts.map((post) => (
               <div key={post.id} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                 <p className="whitespace-pre-wrap">{post.text}</p>
-                <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-                  {authorEmails[post.author_user_id] ?? "..."} · {new Date(post.created_at).toLocaleString()}
-                </p>
+                <div className="mt-2 flex items-center justify-between text-sm text-[var(--color-text-muted)]">
+                  <span>
+                    {authorEmails[post.author_user_id] ?? "..."} · {new Date(post.created_at).toLocaleString()}
+                  </span>
+                  {session?.userId === post.author_user_id && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePost(post.id)}
+                      className="text-[var(--color-danger)] hover:underline"
+                    >
+                      Borrar
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

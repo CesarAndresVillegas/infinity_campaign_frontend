@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import {
   addMatchView,
+  deleteMatch,
   getMatch,
   likeMatch,
   listCountries,
@@ -17,6 +18,8 @@ import Button from "../components/Button";
 export default function MatchDetailPage() {
   const { matchId } = useParams<{ matchId: string }>();
   const { session } = useAuth();
+  const navigate = useNavigate();
+  const [deleting, setDeleting] = useState(false);
 
   const [match, setMatch] = useState<MatchDetail | null>(null);
   const [factions, setFactions] = useState<Faction[]>([]);
@@ -56,6 +59,19 @@ export default function MatchDetailPage() {
       setError(err instanceof Error ? err.message : "No se pudo registrar el like");
     } finally {
       setLikeBusy(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!session || !match) return;
+    if (!confirm("¿Seguro que quieres borrar esta partida?")) return;
+    setDeleting(true);
+    try {
+      await deleteMatch(session.idToken, match.id);
+      navigate("/matches");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo borrar la partida");
+      setDeleting(false);
     }
   }
 
@@ -118,6 +134,11 @@ export default function MatchDetailPage() {
           </Button>
         ) : (
           <span>❤ {match.likes_count} likes</span>
+        )}
+        {session?.userId === match.user_id && (
+          <Button variant="secondary" className="px-3 py-1 text-[var(--color-danger)]" onClick={handleDelete} disabled={deleting}>
+            Borrar partida
+          </Button>
         )}
       </div>
     </PageLayout>
