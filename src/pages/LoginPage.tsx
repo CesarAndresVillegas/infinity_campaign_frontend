@@ -49,7 +49,12 @@ export default function LoginPage() {
         </Button>
       </form>
       {error && <p className="mt-3 text-sm text-[var(--color-danger)]">{error}</p>}
-      <p className="mt-6 text-sm text-[var(--color-text-muted)]">
+      <p className="mt-4 text-sm text-[var(--color-text-muted)]">
+        <Link to="/forgot-password" className="text-[var(--color-accent)] hover:underline">
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </p>
+      <p className="mt-2 text-sm text-[var(--color-text-muted)]">
         ¿No tienes cuenta?{" "}
         <Link to="/register" className="text-[var(--color-accent)] hover:underline">
           Regístrate

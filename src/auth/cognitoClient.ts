@@ -35,6 +35,26 @@ export function resendConfirmationCode(email: string): Promise<void> {
   });
 }
 
+export function forgotPassword(email: string): Promise<void> {
+  const user = new CognitoUser({ Username: email, Pool: userPool });
+  return new Promise((resolve, reject) => {
+    user.forgotPassword({
+      onSuccess: () => resolve(),
+      onFailure: (err) => reject(err),
+    });
+  });
+}
+
+export function confirmForgotPassword(email: string, code: string, newPassword: string): Promise<void> {
+  const user = new CognitoUser({ Username: email, Pool: userPool });
+  return new Promise((resolve, reject) => {
+    user.confirmPassword(code, newPassword, {
+      onSuccess: () => resolve(),
+      onFailure: (err) => reject(err),
+    });
+  });
+}
+
 export interface Session {
   idToken: string;
   email: string;
