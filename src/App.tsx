@@ -9,6 +9,7 @@ import FactionsPage from "./pages/FactionsPage";
 import MatchesFeedPage from "./pages/MatchesFeedPage";
 import MatchDetailPage from "./pages/MatchDetailPage";
 import ReportMatchPage from "./pages/ReportMatchPage";
+import ForumHubPage from "./pages/ForumHubPage";
 import ForumThreadsPage from "./pages/ForumThreadsPage";
 import ForumThreadPage from "./pages/ForumThreadPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
@@ -38,6 +39,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReportMatchPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forum"
+            element={
+              <ProtectedRoute>
+                <ForumHubPage />
               </ProtectedRoute>
             }
           />

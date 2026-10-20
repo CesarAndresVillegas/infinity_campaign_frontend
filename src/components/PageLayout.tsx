@@ -27,6 +27,9 @@ export default function PageLayout({ children, fullWidth = false }: { children: 
               <Link to="/factions" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
                 Mis ejércitos
               </Link>
+              <Link to="/forum" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+                Foro
+              </Link>
               <span className="text-[var(--color-text-muted)]">{session.email}</span>
               <Button variant="secondary" onClick={signOut} className="px-3 py-1 text-sm">
                 Salir
