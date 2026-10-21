@@ -10,6 +10,7 @@ import MatchesFeedPage from "./pages/MatchesFeedPage";
 import MatchDetailPage from "./pages/MatchDetailPage";
 import ReportMatchPage from "./pages/ReportMatchPage";
 import ForumHubPage from "./pages/ForumHubPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ForumThreadsPage from "./pages/ForumThreadsPage";
 import ForumThreadPage from "./pages/ForumThreadPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
@@ -66,6 +67,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
